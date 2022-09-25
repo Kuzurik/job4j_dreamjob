@@ -9,7 +9,7 @@ class MainTest {
     @Test
     void add() {
         Main main = new Main();
-        int result = main.add( 1, 1);
+        int result = main.add(1, 1);
         assertThat(result).isEqualTo(2);
     }
 }
