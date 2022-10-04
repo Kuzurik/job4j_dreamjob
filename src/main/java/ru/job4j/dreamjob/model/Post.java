@@ -1,5 +1,7 @@
 package ru.job4j.dreamjob.model;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
@@ -9,7 +11,6 @@ public class Post {
     private String name;
 
     private String description;
-
     private Date created;
 
 
