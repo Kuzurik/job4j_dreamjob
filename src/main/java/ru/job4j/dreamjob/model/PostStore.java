@@ -28,4 +28,13 @@ public class PostStore {
         post.setCreated(new Timestamp(System.currentTimeMillis()));
         posts.put(post.getId(), post);
     }
+
+    public Post findById(int id) {
+        return posts.get(id);
+    }
+
+    public void update(Post post) {
+        post.setCreated(new Timestamp(System.currentTimeMillis()));
+        posts.replace(post.getId(), post);
+    }
 }
