@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.job4j.dreamjob.model.Candidate;
-import ru.job4j.dreamjob.model.CandidateStore;
-import ru.job4j.dreamjob.model.Post;
 import ru.job4j.dreamjob.service.CandidateService;
 
 import java.util.Date;
@@ -16,7 +14,11 @@ import java.util.Date;
 @Controller
 public class CandidateController {
 
-    private final CandidateService service = CandidateService.instOf();
+    private final CandidateService service;
+
+    public CandidateController(CandidateService service) {
+        this.service = service;
+    }
 
     @GetMapping("/candidates")
     public String postCandidates(Model model) {
