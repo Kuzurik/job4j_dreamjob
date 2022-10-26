@@ -9,6 +9,7 @@ import java.util.Objects;
 public class Post {
     private int id;
     private String name;
+    private boolean visible;
 
     private String description;
     private Date created;
@@ -54,6 +55,18 @@ public class Post {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public void setCreated(Date created) {
+        this.created = created;
     }
 
     @Override
