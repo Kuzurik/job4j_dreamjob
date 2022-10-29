@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.service.CandidateService;
+import ru.job4j.dreamjob.service.CityService;
 
 import java.util.Date;
 
@@ -17,9 +18,11 @@ import java.util.Date;
 public class CandidateController {
 
     private final CandidateService service;
+    private final CityService cityService;
 
-    public CandidateController(CandidateService service) {
+    public CandidateController(CandidateService service, CityService cityService) {
         this.service = service;
+        this.cityService = cityService;
     }
 
     @GetMapping("/candidates")
@@ -30,8 +33,7 @@ public class CandidateController {
 
     @GetMapping("/formAddCandidate")
     public String addPost(Model model) {
-        model.addAttribute("addCandidate",
-                new Candidate(0, "Новый кондидат", "Программист", new Date()));
+        model.addAttribute("cities", cityService.getAllCities());
         return "addCandidate";
     }
 
@@ -49,6 +51,7 @@ public class CandidateController {
 
     @GetMapping("/formUpdateCandidate/{candidateId}")
     public String formUpdateCandidate(Model model, @PathVariable("candidateId") int id) {
+        model.addAttribute("cities", cityService.getAllCities());
         model.addAttribute("candidate", service.findById(id));
         return "updateCandidate";
     }

@@ -12,9 +12,11 @@ import java.util.Collection;
 public class CandidateService {
 
     private final CandidateStore store;
+    private final CityService cityService;
 
-    public CandidateService(CandidateStore store) {
+    public CandidateService(CandidateStore store, CityService cityService) {
         this.store = store;
+        this.cityService = cityService;
     }
 
     public Collection<Candidate> findAll() {
@@ -22,6 +24,7 @@ public class CandidateService {
     }
 
     public void add(Candidate candidate) {
+        candidate.setCity(cityService.findById(candidate.getCity().getId()));
         store.add(candidate);
     }
 
@@ -30,6 +33,7 @@ public class CandidateService {
     }
 
     public void update(Candidate candidate) {
+        candidate.setCity(cityService.findById(candidate.getCity().getId()));
         store.update(candidate);
     }
 }
