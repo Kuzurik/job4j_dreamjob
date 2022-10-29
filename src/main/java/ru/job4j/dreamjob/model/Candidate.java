@@ -7,6 +7,7 @@ public class Candidate {
 
     private int id;
     private String name;
+    private boolean visible;
     private String description;
     private City city;
     private Date created;
@@ -49,6 +50,14 @@ public class Candidate {
 
     public void setCreated(Date created) {
         this.created = created;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
     }
 
     public City getCity() {
