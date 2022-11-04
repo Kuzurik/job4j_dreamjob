@@ -10,6 +10,7 @@ public class Candidate {
     private boolean visible;
     private String description;
     private City city;
+    private byte[] photo;
     private Date created;
 
     public Candidate(int id, String name, String description, City city, Date created) {
@@ -19,6 +20,7 @@ public class Candidate {
         this.city = city;
         this.created = created;
     }
+
 
     public int getId() {
         return id;
@@ -66,6 +68,14 @@ public class Candidate {
 
     public void setCity(City city) {
         this.city = city;
+    }
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
     }
 
     @Override
