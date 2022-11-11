@@ -1,8 +1,5 @@
 package ru.job4j.dreamjob.model;
 
-import org.springframework.format.annotation.DateTimeFormat;
-import ru.job4j.dreamjob.service.CityService;
-
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Objects;
@@ -17,9 +14,10 @@ public class Post {
 
     public Post() { }
 
-    public Post(int id, String name, String description, City city, Date created) {
+    public Post(int id, String name, boolean visible, String description, City city, Date created) {
         this.id = id;
         this.name = name;
+        this.visible = visible;
         this.description = description;
         this.city = city;
         this.created = created;
