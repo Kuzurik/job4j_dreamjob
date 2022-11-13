@@ -7,6 +7,8 @@ import ru.job4j.dreamjob.persistence.PostDBStore;
 
 
 import java.util.Collection;
+import java.util.List;
+
 @ThreadSafe
 @Service
 public class PostService {
@@ -20,7 +22,11 @@ public class PostService {
    }
 
     public Collection<Post> findAll() {
-        return store.findAll();
+        List<Post> posts = store.findAll();
+        posts.forEach(post -> post.setCity(
+                cityService.findById(post.getCity().getId())
+        ));
+        return posts;
     }
 
     public void add(Post post) {

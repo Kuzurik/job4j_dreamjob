@@ -5,8 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.Main;
+import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
 import ru.job4j.dreamjob.service.CityService;
+
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -17,31 +19,29 @@ import java.util.List;
 public class PostDBStore {
 
     public static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
-    private final CityService cityService;
     private final BasicDataSource pool;
+    private static final String FIND_ALL = "SELECT * FROM post";
+    private static final String ADD = "INSERT INTO post(name, visible, description, city, created) VALUES (?,?,?,?,?)";
+    private static final String UPDATE =
+            "update post set name = ?, visible = ?, description = ?, city = ?, created = ? where id = ?";
+    private static final String FIND_BY_ID = "SELECT * FROM post WHERE id = ?";
 
     public PostDBStore(CityService cityService, BasicDataSource pool) {
-        this.cityService = cityService;
         this.pool = pool;
     }
 
     public List<Post> findAll() {
         List<Post> posts = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post")
+             PreparedStatement ps =  cn.prepareStatement(FIND_ALL)
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    posts.add(new Post(it.getInt("id"),
-                            it.getString("name"),
-                            it.getBoolean("visible"),
-                            it.getString("description"),
-                            cityService.findById(it.getInt("city")),
-                            it.getTimestamp("created")));
+                    posts.add(createPost(it));
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
         }
         return posts;
     }
@@ -49,8 +49,7 @@ public class PostDBStore {
     public Post add(Post post) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =  cn.prepareStatement(
-                     "INSERT INTO post(name, visible, description, city, created) VALUES (?,?,?,?,?)",
-                     PreparedStatement.RETURN_GENERATED_KEYS)
+                     ADD, PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, post.getName());
             ps.setBoolean(2, post.isVisible());
@@ -64,15 +63,14 @@ public class PostDBStore {
                 }
             }
         } catch (Exception e) {
-           LOGGER.error(e.getMessage());
+           LOGGER.error(e.getMessage(), e);
         }
         return post;
     }
 
     public void update(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps = cn.prepareStatement(
-                     "update post set name = ?, visible = ?, description = ?, city = ?, created = ? where id = ?")) {
+             PreparedStatement ps = cn.prepareStatement(UPDATE)) {
             Post currentPost = findById(post.getId());
             ps.setString(1, post.getName());
             ps.setBoolean(2, post.isVisible());
@@ -83,28 +81,38 @@ public class PostDBStore {
             ps.executeUpdate();
 
         } catch (Exception e) {
-           LOGGER.error(e.getMessage());
+           LOGGER.error(e.getMessage(), e);
         }
     }
 
     public Post findById(int id) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT * FROM post WHERE id = ?")
+             PreparedStatement ps =  cn.prepareStatement(FIND_BY_ID)
         ) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return new Post(it.getInt("id"),
-                            it.getString("name"),
-                            it.getBoolean("visible"),
-                            it.getString("description"),
-                            cityService.findById(it.getInt("city")),
-                            it.getDate("created"));
+                    return createPost(it);
                 }
             }
         } catch (Exception e) {
-            LOGGER.error(e.getMessage());
+            LOGGER.error(e.getMessage(), e);
         }
         return null;
+    }
+
+    public Post createPost(ResultSet it) {
+        Post post = new Post();
+        try {
+            post = new Post(it.getInt("id"),
+                    it.getString("name"),
+                    it.getBoolean("visible"),
+                    it.getString("description"),
+                    new City(it.getInt("city")),
+                    it.getDate("created"));
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+        return post;
     }
 }
