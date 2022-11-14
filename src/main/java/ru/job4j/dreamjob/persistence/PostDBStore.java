@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 import ru.job4j.dreamjob.Main;
 import ru.job4j.dreamjob.model.City;
 import ru.job4j.dreamjob.model.Post;
-import ru.job4j.dreamjob.service.CityService;
+
 
 
 import java.sql.*;
@@ -26,7 +26,7 @@ public class PostDBStore {
             "update post set name = ?, visible = ?, description = ?, city = ?, created = ? where id = ?";
     private static final String FIND_BY_ID = "SELECT * FROM post WHERE id = ?";
 
-    public PostDBStore(CityService cityService, BasicDataSource pool) {
+    public PostDBStore(BasicDataSource pool) {
         this.pool = pool;
     }
 

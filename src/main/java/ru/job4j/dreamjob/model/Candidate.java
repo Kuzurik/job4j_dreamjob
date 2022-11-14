@@ -13,11 +13,14 @@ public class Candidate {
     private byte[] photo;
     private Date created;
 
-    public Candidate(int id, String name, String description, City city, Date created) {
+    public Candidate(int id, String name, boolean visible,
+                     String description, City city, byte[] photo, Date created) {
         this.id = id;
         this.name = name;
+        this.visible = visible;
         this.description = description;
         this.city = city;
+        this.photo = photo;
         this.created = created;
     }
 
