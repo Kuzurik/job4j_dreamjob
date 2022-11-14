@@ -101,18 +101,12 @@ public class PostDBStore {
         return null;
     }
 
-    public Post createPost(ResultSet it) {
-        Post post = new Post();
-        try {
-            post = new Post(it.getInt("id"),
+    public Post createPost(ResultSet it) throws SQLException {
+        return new Post(it.getInt("id"),
                     it.getString("name"),
                     it.getBoolean("visible"),
                     it.getString("description"),
                     new City(it.getInt("city")),
                     it.getDate("created"));
-        } catch (Exception e) {
-            LOGGER.error(e.getMessage(), e);
-        }
-        return post;
     }
 }
