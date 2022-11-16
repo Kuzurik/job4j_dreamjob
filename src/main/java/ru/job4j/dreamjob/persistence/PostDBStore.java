@@ -48,9 +48,8 @@ public class PostDBStore {
 
     public Post add(Post post) {
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement(
-                     ADD, PreparedStatement.RETURN_GENERATED_KEYS)
-        ) {
+             PreparedStatement ps = cn.prepareStatement(
+                     ADD, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, post.getName());
             ps.setBoolean(2, post.isVisible());
             ps.setString(3, post.getDescription());

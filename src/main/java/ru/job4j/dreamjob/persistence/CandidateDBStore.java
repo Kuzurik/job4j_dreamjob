@@ -21,9 +21,9 @@ public class CandidateDBStore {
     private final BasicDataSource pool;
     private static final String FIND_ALL = "SELECT * FROM candidate";
     private static final String ADD =
-            "INSERT INTO candidate(name, visible, description, city, photo, created) VALUES (?,?,?,?,?,?)";
+            "INSERT INTO candidate(name, visible, description, city_id, photo, created) VALUES (?,?,?,?,?,?)";
     private static final String UPDATE =
-            "update candidate set name = ?, visible = ?, description = ?, city = ?, photo = ?, created = ? where id = ?";
+            "update candidate set name = ?, visible = ?, description = ?, city_id = ?, photo = ?, created = ? where id = ?";
     private static final String FIND_BY_ID = "SELECT * FROM candidate WHERE id = ?";
 
     public CandidateDBStore(BasicDataSource pool) {
@@ -47,8 +47,8 @@ public class CandidateDBStore {
 
     public Candidate add(Candidate candidate) {
         try (Connection cn = pool.getConnection();
-        PreparedStatement ps = cn.prepareStatement(ADD,
-                PreparedStatement.RETURN_GENERATED_KEYS)) {
+        PreparedStatement ps = cn.prepareStatement(
+                ADD, PreparedStatement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, candidate.getName());
             ps.setBoolean(2, candidate.isVisible());
             ps.setString(3, candidate.getDescription());
@@ -67,7 +67,8 @@ public class CandidateDBStore {
         return candidate;
     }
 
-    public void update(Candidate candidate) {
+    public boolean update(Candidate candidate) {
+        boolean result = false;
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(UPDATE)) {
             Candidate currentCandidate = findById(candidate.getId());
@@ -78,10 +79,14 @@ public class CandidateDBStore {
             ps.setBytes(5, candidate.getPhoto());
             ps.setTimestamp(6, new Timestamp(new Date().getTime()));
             ps.setInt(7, currentCandidate.getId());
-            ps.executeUpdate();
+            int count = ps.executeUpdate();
+            if (count > 0) {
+                result = true;
+            }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
+        return result;
     }
 
     public Candidate findById(int id) {
@@ -105,7 +110,7 @@ public class CandidateDBStore {
                 it.getString("name"),
                 it.getBoolean("visible"),
                 it.getString("description"),
-                new City(it.getInt("city")),
+                new City(it.getInt("city_id")),
                 it.getBytes("photo"),
                 it.getDate("created"));
     }

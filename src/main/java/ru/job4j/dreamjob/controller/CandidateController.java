@@ -41,13 +41,13 @@ public class CandidateController {
     }
 
     @GetMapping("/formAddCandidate")
-    public String addPost(Model model) {
+    public String addCandidate(Model model) {
         model.addAttribute("cities", cityService.getAllCities());
         return "addCandidate";
     }
 
     @PostMapping("/createCandidate")
-    public String createPost(@ModelAttribute Candidate candidate,
+    public String createCandidate(@ModelAttribute Candidate candidate,
                              @RequestParam("file") MultipartFile file) throws IOException {
         candidate.setPhoto(file.getBytes());
         service.add(candidate);
@@ -55,7 +55,7 @@ public class CandidateController {
     }
 
     @PostMapping("/updateCandidate")
-    public String updatePost(@ModelAttribute Candidate candidate,
+    public String updateCandidate(@ModelAttribute Candidate candidate,
                              @RequestParam("file") MultipartFile file) throws IOException {
         candidate.setPhoto(file.getBytes());
         service.update(candidate);

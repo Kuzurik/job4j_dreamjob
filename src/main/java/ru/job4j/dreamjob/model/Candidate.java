@@ -13,6 +13,8 @@ public class Candidate {
     private byte[] photo;
     private Date created;
 
+    public Candidate() {
+    }
     public Candidate(int id, String name, boolean visible,
                      String description, City city, byte[] photo, Date created) {
         this.id = id;

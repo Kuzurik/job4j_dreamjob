@@ -3,7 +3,7 @@ CREATE TABLE candidate (
    name TEXT,
    visible boolean,
    description TEXT,
-   city int,
+   city_id int,
    photo bytea,
    created TIMESTAMP
 );
