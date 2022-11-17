@@ -79,10 +79,7 @@ public class CandidateDBStore {
             ps.setBytes(5, candidate.getPhoto());
             ps.setTimestamp(6, new Timestamp(new Date().getTime()));
             ps.setInt(7, currentCandidate.getId());
-            int count = ps.executeUpdate();
-            if (count > 0) {
-                result = true;
-            }
+            result  = ps.executeUpdate() > 0;
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
