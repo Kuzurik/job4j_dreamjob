@@ -25,6 +25,7 @@ public class PostDBStore {
     private static final String UPDATE =
             "update post set name = ?, visible = ?, description = ?, city = ?, created = ? where id = ?";
     private static final String FIND_BY_ID = "SELECT * FROM post WHERE id = ?";
+    private static final String WIPE_TABLE = "delete from post";
 
     public PostDBStore(BasicDataSource pool) {
         this.pool = pool;
@@ -107,5 +108,14 @@ public class PostDBStore {
                     it.getString("description"),
                     new City(it.getInt("city")),
                     it.getDate("created"));
+    }
+
+    public void wipeTable() {
+        try (Connection cn = pool.getConnection();
+            PreparedStatement ps = cn.prepareStatement(WIPE_TABLE)) {
+            ps.execute();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 }

@@ -25,6 +25,7 @@ public class CandidateDBStore {
     private static final String UPDATE =
             "update candidate set name = ?, visible = ?, description = ?, city_id = ?, photo = ?, created = ? where id = ?";
     private static final String FIND_BY_ID = "SELECT * FROM candidate WHERE id = ?";
+    private static final String WIPE_TABLE = "delete from candidate";
 
     public CandidateDBStore(BasicDataSource pool) {
         this.pool = pool;
@@ -110,5 +111,14 @@ public class CandidateDBStore {
                 new City(it.getInt("city_id")),
                 it.getBytes("photo"),
                 it.getDate("created"));
+    }
+
+    public void wipeTable() {
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement(WIPE_TABLE)) {
+            ps.execute();
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 }
