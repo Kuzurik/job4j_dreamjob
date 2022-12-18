@@ -31,7 +31,7 @@ public class UserDBStore {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
                      ADD, PreparedStatement.RETURN_GENERATED_KEYS)) {
-             ps.setString(1, user.getEMail());
+             ps.setString(1, user.getEmail());
              ps.setString(2, user.getPassword());
              ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
@@ -46,20 +46,20 @@ public class UserDBStore {
         return result;
     }
 
-    public User findById(int id) {
+    public Optional<User> findById(int id) {
         try (Connection cn = pool.getConnection();
         PreparedStatement ps = cn.prepareStatement(FIND_BY_ID)) {
             ps.setInt(1, id);
             try (ResultSet it = ps.executeQuery()) {
                 if (it.next()) {
-                    return new User(it.getInt("id"),
-                            it.getString("email"), it.getString("password"));
+                    return Optional.of(new User(it.getInt("id"),
+                            it.getString("email"), it.getString("password")));
                 }
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
-        return null;
+        return Optional.empty();
     }
 
 }

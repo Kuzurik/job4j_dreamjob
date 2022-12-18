@@ -4,20 +4,20 @@ import java.util.Objects;
 
 public class User {
     private int id;
-    private String eMail;
+    private String email;
     private String password;
 
     public User() {
     }
 
-    public User(String eMail, String password) {
-        this.eMail = eMail;
+    public User(String email, String password) {
+        this.email = email;
         this.password = password;
     }
 
-    public User(int id, String eMail, String password) {
+    public User(int id, String email, String password) {
         this.id = id;
-        this.eMail = eMail;
+        this.email = email;
         this.password = password;
     }
 
@@ -29,12 +29,12 @@ public class User {
         this.id = id;
     }
 
-    public String getEMail() {
-        return eMail;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEMail(String eMail) {
-        this.eMail = eMail;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getPassword() {
@@ -54,11 +54,11 @@ public class User {
             return false;
         }
         User user = (User) o;
-        return id == user.id && Objects.equals(eMail, user.eMail) && Objects.equals(password, user.password);
+        return id == user.id && Objects.equals(email, user.email) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, eMail, password);
+        return Objects.hash(id, email, password);
     }
 }
