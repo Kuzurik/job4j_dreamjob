@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import ru.job4j.dreamjob.ValidateUser;
 import ru.job4j.dreamjob.model.User;
 
 import javax.servlet.http.HttpSession;
@@ -15,11 +16,7 @@ public class IndexControl {
 
     @GetMapping("/index")
     public String index(Model model, HttpSession session) {
-        User user = (User) session.getAttribute("user");
-        if (user == null) {
-            user = new User();
-            user.setEmail("Гость");
-        }
+        User user = ValidateUser.validateUser(session);
         model.addAttribute("user", user);
         return "index";
     }

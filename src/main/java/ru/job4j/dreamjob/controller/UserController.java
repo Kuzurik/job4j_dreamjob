@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import ru.job4j.dreamjob.ValidateUser;
 import ru.job4j.dreamjob.model.User;
 import ru.job4j.dreamjob.service.UserService;
 
@@ -51,8 +52,9 @@ public class UserController {
     }
 
     @GetMapping("/formRegistration")
-    public String createUser(Model model) {
-        model.addAttribute("user", new User("email", "password"));
+    public String createUser(Model model, HttpSession session) {
+        User user = ValidateUser.validateUser(session);
+        model.addAttribute("user", user);
         return "registration";
     }
 
