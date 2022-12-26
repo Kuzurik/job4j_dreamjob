@@ -1,10 +1,14 @@
-package ru.job4j.dreamjob;
+package ru.job4j.dreamjob.util;
 
 import ru.job4j.dreamjob.model.User;
 
 import javax.servlet.http.HttpSession;
 
-public class ValidateUser {
+public final class ValidateUser {
+
+    private ValidateUser() {
+
+    }
     public static User validateUser(HttpSession session) {
         User user = (User) session.getAttribute("user");
         if (user == null) {
