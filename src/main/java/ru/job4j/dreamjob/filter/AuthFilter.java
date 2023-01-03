@@ -11,12 +11,7 @@ import java.util.Set;
 @Component
 public class AuthFilter implements Filter {
 
-    private final static String LOGIN_PAGE = "loginPage";
-    private final static String LOGIN = "login";
-    private final static String REG = "registration";
-    private final static String REG_FORM = "formRegistration";
-
-    private final Set<String> ends = Set.of(LOGIN_PAGE, LOGIN, REG, REG_FORM);
+    private final static Set<String> ENDS = Set.of("loginPage", "login", "registration", "formRegistration");
 
     @Override
     public void doFilter(
@@ -26,7 +21,7 @@ public class AuthFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse res = (HttpServletResponse) response;
         String uri = req.getRequestURI();
-        if (findEnd(uri)) {
+        if (findEnds(uri)) {
             chain.doFilter(req, res);
             return;
         }
@@ -37,12 +32,7 @@ public class AuthFilter implements Filter {
         chain.doFilter(req, res);
     }
 
-    public boolean findEnd(String uri) {
-        for (String end : ends) {
-            if (uri.endsWith(end)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean findEnds(String uri) {
+        return ENDS.stream().anyMatch(uri::endsWith);
     }
 }
