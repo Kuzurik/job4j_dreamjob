@@ -4,11 +4,11 @@ import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.Objects;
 
-public class Candidate {
+public class Vacancy {
 
     public static final Map<String, String> COLUMN_MAPPING = Map.of(
             "id", "id",
-            "name", "name",
+            "title", "title",
             "description", "description",
             "creation_date", "creationDate",
             "visible", "visible",
@@ -18,31 +18,30 @@ public class Candidate {
 
     private int id;
 
-    private String name;
+    private String title;
 
     private String description;
 
     private LocalDateTime creationDate;
 
-    private boolean visible;
-
     private int cityId;
+
+    private boolean visible;
 
     private int fileId;
 
+    public Vacancy() {
+    }
 
-    public Candidate(int id, String name, String description,
-                     LocalDateTime creationDate, boolean visible, int cityId, int fileId) {
+    public Vacancy(int id, String title, String description,
+                   LocalDateTime creationDate, boolean visible, int cityId, int fileId) {
         this.id = id;
-        this.name = name;
+        this.title = title;
         this.description = description;
         this.creationDate = creationDate;
         this.visible = visible;
         this.cityId = cityId;
         this.fileId = fileId;
-    }
-
-    public Candidate() {
     }
 
     public int getId() {
@@ -53,12 +52,12 @@ public class Candidate {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     public String getDescription() {
@@ -109,12 +108,12 @@ public class Candidate {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        Candidate candidate = (Candidate) o;
-        return id == candidate.id && Objects.equals(name, candidate.name);
+        Vacancy vacancy = (Vacancy) o;
+        return id == vacancy.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name);
+        return Objects.hash(id);
     }
 }

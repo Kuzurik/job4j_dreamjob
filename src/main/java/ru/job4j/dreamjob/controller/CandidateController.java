@@ -5,80 +5,83 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.job4j.dreamjob.util.ValidateUser;
+import ru.job4j.dreamjob.dto.FileDto;
 import ru.job4j.dreamjob.model.Candidate;
-import ru.job4j.dreamjob.model.User;
-import ru.job4j.dreamjob.service.CandidateService;
-import ru.job4j.dreamjob.service.CityService;
-import org.springframework.core.io.ByteArrayResource;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import ru.job4j.dreamjob.service.candidate.CandidateService;
+import ru.job4j.dreamjob.service.city.CityService;
 
-import javax.servlet.http.HttpSession;
-import java.io.IOException;
-
-@ThreadSafe
 @Controller
+@RequestMapping("/candidates")
+@ThreadSafe
 public class CandidateController {
 
-    private final CandidateService service;
+    private final CandidateService candidateService;
+
     private final CityService cityService;
 
-    public CandidateController(CandidateService service, CityService cityService) {
-        this.service = service;
+    public CandidateController(CandidateService candidateService, CityService cityService) {
+        this.candidateService = candidateService;
         this.cityService = cityService;
     }
 
-    @GetMapping("/candidates")
-    public String postCandidates(Model model, HttpSession session) {
-        User user = ValidateUser.validateUser(session);
-        model.addAttribute("user", user);
-        model.addAttribute("candidates", service.findAll());
-        return "candidates";
+    @GetMapping
+    public String getAll(Model model) {
+        model.addAttribute("candidates", candidateService.findAll());
+        return "candidates/list";
     }
 
-    @GetMapping("/formAddCandidate")
-    public String addCandidate(Model model, HttpSession session) {
-        User user = ValidateUser.validateUser(session);
-        model.addAttribute("user", user);
-        model.addAttribute("cities", cityService.getAllCities());
-        return "addCandidate";
+    @GetMapping("/create")
+    public String getCreationPage(Model model) {
+        model.addAttribute("cities", cityService.findAll());
+        return "candidates/create";
     }
 
-    @PostMapping("/createCandidate")
-    public String createCandidate(@ModelAttribute Candidate candidate,
-                             @RequestParam("file") MultipartFile file) throws IOException {
-        candidate.setPhoto(file.getBytes());
-        service.add(candidate);
+    @PostMapping("/create")
+    public String create(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model) {
+        try {
+            candidateService.save(candidate, new FileDto(file.getOriginalFilename(), file.getBytes()));
+            return "redirect:/candidates";
+        } catch (Exception exception) {
+            model.addAttribute("message", exception.getMessage());
+            return "errors/404";
+        }
+    }
+
+    @GetMapping("/{id}")
+    public String getById(Model model, @PathVariable int id) {
+        var candidateOptional = candidateService.findById(id);
+        if (candidateOptional.isEmpty()) {
+            model.addAttribute("message", "Кандидат с указанным идентификатором не найдена");
+            return "errors/404";
+        }
+        model.addAttribute("cities", cityService.findAll());
+        model.addAttribute("candidate", candidateOptional.get());
+        return "candidates/one";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model) {
+        try {
+            var isUpdated = candidateService.update(candidate,
+                    new FileDto(file.getOriginalFilename(), file.getBytes()));
+            if (!isUpdated) {
+                model.addAttribute("message", "Кандидат с указанным идентификатором не найдена");
+                return "errors/404";
+            }
+            return "redirect:/candidates";
+        } catch (Exception exception) {
+            model.addAttribute("message", exception.getMessage());
+            return "errors/404";
+        }
+    }
+
+    @GetMapping("/delete/{id}")
+    public String delete(Model model, @PathVariable int id) {
+        var isDeleted = candidateService.deleteById(id);
+        if (!isDeleted) {
+            model.addAttribute("message", "Кандидат с указанным идентификатором не найдена");
+            return "errors/404";
+        }
         return "redirect:/candidates";
-    }
-
-    @PostMapping("/updateCandidate")
-    public String updateCandidate(@ModelAttribute Candidate candidate,
-                             @RequestParam("file") MultipartFile file) throws IOException {
-        candidate.setPhoto(file.getBytes());
-        service.update(candidate);
-        return "redirect:/candidates";
-    }
-
-    @GetMapping("/formUpdateCandidate/{candidateId}")
-    public String formUpdateCandidate(Model model, @PathVariable("candidateId") int id, HttpSession session) {
-        User user = ValidateUser.validateUser(session);
-        model.addAttribute("user", user);
-        model.addAttribute("cities", cityService.getAllCities());
-        model.addAttribute("candidate", service.findById(id));
-        return "updateCandidate";
-    }
-
-    @GetMapping("/photoCandidate/{candidateId}")
-    public ResponseEntity<Resource> download(@PathVariable("candidateId") Integer candidateId) {
-        Candidate candidate = service.findById(candidateId);
-        return ResponseEntity.ok()
-                .headers(new HttpHeaders())
-                .contentLength(candidate.getPhoto().length)
-                .contentType(MediaType.parseMediaType("application/octet-stream"))
-                .body(new ByteArrayResource(candidate.getPhoto()));
     }
 }
