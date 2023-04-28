@@ -42,7 +42,7 @@ class Sql2oUserRepositoryTest {
     @Test
     public void whenSaveThanGetSame() {
         var user = sql2oUserRepository.save(
-                new User(0 , "alex", "vorota-24@bk.ru", "1111"));
+                new User(0, "alex", "vorota-24@bk.ru", "1111"));
         var savedUser = sql2oUserRepository.findByEmailAndPassword("vorota-24@bk.ru", "1111");
         assertThat(savedUser).usingRecursiveComparison().isEqualTo(user);
     }
@@ -50,7 +50,7 @@ class Sql2oUserRepositoryTest {
     @Test
     public void whenFindUserByEmailAndPass() {
         var user = sql2oUserRepository.save(
-                new User(0 , "alex", "vorota-24@bk.ru", "1111"));
+                new User(0, "alex", "vorota-24@bk.ru", "1111"));
         var result = sql2oUserRepository.findByEmailAndPassword("vorota-24@bk.ru", "1111");
         assertThat(result).isEqualTo(user);
     }

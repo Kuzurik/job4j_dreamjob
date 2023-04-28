@@ -10,17 +10,15 @@ import java.util.Optional;
 @Repository
 public class Sql2oCandidateRepository implements CandidateRepository {
 
-    private final static String SAVE =
-            """
+    private final static String SAVE = """
             INSERT INTO candidates(name, description, creation_date, visible, city_id, file_id)
             VALUES (:name, :description, :creationDate, :visible, :cityId, :fileId)
             """;
 
     private final static String DELETE_BY_ID = "DELETE FROM candidates WHERE id = :id";
 
-    private final static String UPDATE =
-            """
-            UPDATE candidates
+    private final static String UPDATE = """
+             UPDATE candidates
             SET name = :name, description = :description, creation_date = :creationDate,
                 visible = :visible, city_id = :cityId, file_id = :fileId
             WHERE id = :id
