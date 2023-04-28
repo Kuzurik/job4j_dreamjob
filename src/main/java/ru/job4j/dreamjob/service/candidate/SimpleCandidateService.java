@@ -1,6 +1,5 @@
 package ru.job4j.dreamjob.service.candidate;
 
-import net.jcip.annotations.ThreadSafe;
 import org.springframework.stereotype.Service;
 import ru.job4j.dreamjob.dto.FileDto;
 import ru.job4j.dreamjob.model.Candidate;
@@ -51,7 +50,6 @@ public class SimpleCandidateService implements CandidateService {
         if (isNewFileEmpty) {
             return candidateRepository.update(candidate);
         }
-        /* если передан новый не пустой файл, то старый удаляем, а новый сохраняем */
         var oldFileId = candidate.getFileId();
         saveNewFile(candidate, image);
         var isUpdated = candidateRepository.update(candidate);
