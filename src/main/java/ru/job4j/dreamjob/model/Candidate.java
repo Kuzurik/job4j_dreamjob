@@ -30,7 +30,6 @@ public class Candidate {
 
     private int fileId;
 
-
     public Candidate(int id, String name, String description,
                      LocalDateTime creationDate, boolean visible, int cityId, int fileId) {
         this.id = id;

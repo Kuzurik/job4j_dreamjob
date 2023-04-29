@@ -11,7 +11,6 @@ import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.service.candidate.CandidateService;
 import ru.job4j.dreamjob.service.city.CityService;
 
-
 @Controller
 @RequestMapping("/candidates")
 @ThreadSafe
@@ -39,9 +38,11 @@ public class CandidateController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model) {
+    public String create(@ModelAttribute Candidate candidate,
+                         @RequestParam MultipartFile file, Model model) {
         try {
-            candidateService.save(candidate, new FileDto(file.getOriginalFilename(), file.getBytes()));
+            candidateService.save(candidate,
+                    new FileDto(file.getOriginalFilename(), file.getBytes()));
             return "redirect:/candidates";
         } catch (Exception exception) {
             model.addAttribute("message", exception.getMessage());
@@ -62,7 +63,8 @@ public class CandidateController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Candidate candidate, @RequestParam MultipartFile file, Model model) {
+    public String update(@ModelAttribute Candidate candidate,
+                         @RequestParam MultipartFile file, Model model) {
         try {
             var isUpdated = candidateService.update(candidate,
                     new FileDto(file.getOriginalFilename(), file.getBytes()));

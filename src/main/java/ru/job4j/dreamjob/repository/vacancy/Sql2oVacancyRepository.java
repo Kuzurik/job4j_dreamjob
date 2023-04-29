@@ -12,7 +12,8 @@ public class Sql2oVacancyRepository implements VacancyRepository {
 
     private final static String SAVE =
                       """
-                      INSERT INTO vacancies(title, description, creation_date, visible, city_id, file_id)
+                      INSERT INTO vacancies(title, description,
+                       creation_date, visible, city_id, file_id)
                       VALUES (:title, :description, :creationDate, :visible, :cityId, :fileId)
                       """;
 
@@ -83,7 +84,9 @@ public class Sql2oVacancyRepository implements VacancyRepository {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery(FIND_BY_ID);
             query.addParameter("id", id);
-            var vacancy = query.setColumnMappings(Vacancy.COLUMN_MAPPING).executeAndFetchFirst(Vacancy.class);
+            var vacancy = query
+                    .setColumnMappings(Vacancy.COLUMN_MAPPING)
+                    .executeAndFetchFirst(Vacancy.class);
             return Optional.ofNullable(vacancy);
         }
     }

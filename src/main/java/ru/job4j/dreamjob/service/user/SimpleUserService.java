@@ -15,7 +15,6 @@ public class SimpleUserService implements UserService {
         this.sql2oUserRepository = sql2oUserRepository;
     }
 
-
     @Override
     public Optional<User> save(User user) {
         return sql2oUserRepository.save(user);

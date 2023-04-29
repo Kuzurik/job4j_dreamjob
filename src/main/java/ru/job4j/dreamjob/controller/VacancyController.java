@@ -10,8 +10,6 @@ import ru.job4j.dreamjob.model.Vacancy;
 import ru.job4j.dreamjob.service.city.CityService;
 import ru.job4j.dreamjob.service.vacancy.VacancyService;
 
-
-
 @Controller
 @RequestMapping("/vacancies")
 @ThreadSafe
@@ -39,7 +37,8 @@ public class VacancyController {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Vacancy vacancy, @RequestParam MultipartFile file, Model model) {
+    public String create(@ModelAttribute Vacancy vacancy,
+                         @RequestParam MultipartFile file, Model model) {
         try {
             vacancyService.save(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
             return "redirect:/vacancies";
@@ -62,9 +61,11 @@ public class VacancyController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Vacancy vacancy, @RequestParam MultipartFile file, Model model) {
+    public String update(@ModelAttribute Vacancy vacancy,
+                         @RequestParam MultipartFile file, Model model) {
         try {
-            var isUpdated = vacancyService.update(vacancy, new FileDto(file.getOriginalFilename(), file.getBytes()));
+            var isUpdated = vacancyService.update(vacancy,
+                    new FileDto(file.getOriginalFilename(), file.getBytes()));
             if (!isUpdated) {
                 model.addAttribute("message", "Вакансия с указанным идентификатором не найдена");
                 return "errors/404";

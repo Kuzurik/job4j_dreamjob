@@ -32,7 +32,6 @@ public class MemoryCandidateRepository implements CandidateRepository {
                 LocalDateTime.now(), true, 3, 0));
     }
 
-
     @Override
     public Candidate save(Candidate candidate) {
         candidate.setId(nextId++);

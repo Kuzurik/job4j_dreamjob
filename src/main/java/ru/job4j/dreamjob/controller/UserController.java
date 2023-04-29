@@ -12,8 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import ru.job4j.dreamjob.model.User;
 import ru.job4j.dreamjob.service.user.UserService;
 
-
-
 @ThreadSafe
 @Controller
 @RequestMapping("/users")

@@ -54,7 +54,9 @@ public class Sql2oUserRepository implements UserRepository {
             var query = connection.createQuery(FIND_BY_EMAIL_AND_PASS);
             query.addParameter("email", email)
                     .addParameter("password", password);
-            var user = query.setColumnMappings(User.COLUMN_MAPPING).executeAndFetchFirst(User.class);
+            var user = query
+                    .setColumnMappings(User.COLUMN_MAPPING)
+                    .executeAndFetchFirst(User.class);
             return Optional.ofNullable(user);
         }
     }
