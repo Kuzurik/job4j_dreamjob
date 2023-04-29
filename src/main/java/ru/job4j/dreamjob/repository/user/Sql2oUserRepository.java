@@ -1,15 +1,18 @@
 package ru.job4j.dreamjob.repository.user;
 
+import net.jcip.annotations.ThreadSafe;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Repository;
 import org.sql2o.Sql2o;
+import org.sql2o.Sql2oException;
 import ru.job4j.dreamjob.model.User;
 
 import java.util.Collection;
 import java.util.Optional;
 
 @Repository
+@ThreadSafe
 public class Sql2oUserRepository implements UserRepository {
 
     private final static String SAVE =
@@ -41,9 +44,8 @@ public class Sql2oUserRepository implements UserRepository {
             user.setId(generatedId);
             return Optional.of(user);
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            throw new Sql2oException("Пользователь с таким именем уже существует");
         }
-        return Optional.empty();
     }
 
     @Override

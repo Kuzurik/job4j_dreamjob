@@ -3,12 +3,15 @@ package ru.job4j.dreamjob.repository.user;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.sql2o.Sql2oException;
 import ru.job4j.dreamjob.configuration.DatasourceConfiguration;
 import ru.job4j.dreamjob.model.User;
 
+import java.util.List;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.Assert.assertThrows;
 
 class Sql2oUserRepositoryTest {
     private static Sql2oUserRepository sql2oUserRepository;
@@ -42,16 +45,44 @@ class Sql2oUserRepositoryTest {
     @Test
     public void whenSaveThanGetSame() {
         var user = sql2oUserRepository.save(
-                new User(0, "alex", "vorota-24@bk.ru", "1111"));
-        var savedUser = sql2oUserRepository.findByEmailAndPassword("vorota-24@bk.ru", "1111");
+                new User(0, "vorota-24@bk.ru", "alex", "1111")).get();
+        var savedUser = sql2oUserRepository.findByEmailAndPassword(user.getEmail(), user.getPassword()).get();
         assertThat(savedUser).usingRecursiveComparison().isEqualTo(user);
     }
 
     @Test
     public void whenFindUserByEmailAndPass() {
+        var user = sql2oUserRepository.save(new User(0, "vorota-24@bk.ru", "alex", "1111")).get();
+        assertThat(user).usingRecursiveComparison().isEqualTo(
+                sql2oUserRepository.findByEmailAndPassword(user.getEmail(), user.getPassword()).get());
+    }
+
+    @Test
+    public void whenFindAllUsers() {
         var user = sql2oUserRepository.save(
-                new User(0, "alex", "vorota-24@bk.ru", "1111"));
-        var result = sql2oUserRepository.findByEmailAndPassword("vorota-24@bk.ru", "1111");
-        assertThat(result).isEqualTo(user);
+                new User(0, "vorota-24@bk.ru", "alex", "1111")).get();
+        var user1 = sql2oUserRepository.save(
+                new User(1, "alex.beltexno@gmail.com", "fedor", "1111")).get();
+        var user2 = sql2oUserRepository.save(
+                new User(2, "desing125@bk.ru", "irina", "1111")).get();
+        var result = sql2oUserRepository.findAll();
+        assertThat(result).isEqualTo(List.of(user, user1, user2));
+    }
+
+    @Test
+    public void whenUserIsAlreadyExistsThenException() {
+        var user = sql2oUserRepository.save(
+                new User(0, "vorota-24@bk.ru", "alex", "1111")).get();
+        assertThrows(Sql2oException.class, () -> sql2oUserRepository.save(user));
+    }
+
+    @Test
+    public void whenDeleteById() {
+        var user = sql2oUserRepository.save(
+                new User(0, "vorota-24@bk.ru", "alex", "1111")).get();
+        var user1 = sql2oUserRepository.save(
+                new User(0, "alex.beltexno@gmail.com", "alex", "2222")).get();
+        sql2oUserRepository.deleteById(user.getId());
+        assertThat(sql2oUserRepository.findAll()).isEqualTo(List.of(user1));
     }
 }
