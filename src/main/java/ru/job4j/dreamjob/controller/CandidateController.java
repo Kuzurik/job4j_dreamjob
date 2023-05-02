@@ -10,6 +10,9 @@ import ru.job4j.dreamjob.dto.FileDto;
 import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.service.candidate.CandidateService;
 import ru.job4j.dreamjob.service.city.CityService;
+import ru.job4j.dreamjob.util.CheckUser;
+
+import javax.servlet.http.HttpSession;
 
 @Controller
 @RequestMapping("/candidates")
@@ -26,13 +29,17 @@ public class CandidateController {
     }
 
     @GetMapping
-    public String getAll(Model model) {
+    public String getAll(Model model, HttpSession session) {
+        var user = CheckUser.checkUser(session);
+        model.addAttribute("user", user);
         model.addAttribute("candidates", candidateService.findAll());
         return "candidates/list";
     }
 
     @GetMapping("/create")
-    public String getCreationPage(Model model) {
+    public String getCreationPage(Model model, HttpSession session) {
+        var user = CheckUser.checkUser(session);
+        model.addAttribute("user", user);
         model.addAttribute("cities", cityService.findAll());
         return "candidates/create";
     }
@@ -51,12 +58,14 @@ public class CandidateController {
     }
 
     @GetMapping("/{id}")
-    public String getById(Model model, @PathVariable int id) {
+    public String getById(Model model, @PathVariable int id, HttpSession session) {
+        var user = CheckUser.checkUser(session);
         var candidateOptional = candidateService.findById(id);
         if (candidateOptional.isEmpty()) {
             model.addAttribute("message", "Кандидат с указанным идентификатором не найдена");
             return "errors/404";
         }
+        model.addAttribute("user", user);
         model.addAttribute("cities", cityService.findAll());
         model.addAttribute("candidate", candidateOptional.get());
         return "candidates/one";
@@ -80,7 +89,9 @@ public class CandidateController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(Model model, @PathVariable int id) {
+    public String delete(Model model, @PathVariable int id, HttpSession session) {
+        var user = CheckUser.checkUser(session);
+        model.addAttribute("user", user);
         var isDeleted = candidateService.deleteById(id);
         if (!isDeleted) {
             model.addAttribute("message", "Кандидат с указанным идентификатором не найдена");
