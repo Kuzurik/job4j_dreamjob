@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import ru.job4j.dreamjob.model.User;
 import ru.job4j.dreamjob.service.user.UserService;
-import ru.job4j.dreamjob.util.CheckUser;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -29,8 +28,6 @@ public class UserController {
 
     @GetMapping("/register")
     public String getRegistrationPage(Model model, HttpSession session) {
-        var user = CheckUser.checkUser(session);
-        model.addAttribute("user", user);
         return "users/register";
     }
 
@@ -51,8 +48,6 @@ public class UserController {
 
     @GetMapping("/login")
     public String getLoginPage(Model model, HttpSession session) {
-        var user = CheckUser.checkUser(session);
-        model.addAttribute("user", user);
         return "users/login";
     }
 

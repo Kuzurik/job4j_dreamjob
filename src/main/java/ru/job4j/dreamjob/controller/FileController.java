@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.job4j.dreamjob.service.file.FileService;
-import ru.job4j.dreamjob.util.CheckUser;
 
 import javax.servlet.http.HttpSession;
 
@@ -23,8 +22,6 @@ public class FileController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getById(Model model, @PathVariable int id, HttpSession session) {
-        var user = CheckUser.checkUser(session);
-        model.addAttribute("user", user);
         var contentOptional = fileService.getFileById(id);
         if (contentOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
