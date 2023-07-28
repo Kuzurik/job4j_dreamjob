@@ -27,27 +27,24 @@ public class UserController {
     }
 
     @GetMapping("/register")
-    public String getRegistrationPage(Model model, HttpSession session) {
+    public String getRegistrationPage() {
         return "users/register";
     }
 
     @PostMapping("/register")
-    public String register(@ModelAttribute User user, Model model) {
-        try {
-            var result = simpleUserService.save(user);
-            if (result.isEmpty()) {
-                model.addAttribute("message", "Пользователь с таким именем уже существует");
-                return "errors/404";
-            }
-            return "users/created";
-        } catch (Exception e) {
-            model.addAttribute("msg", e.getMessage());
+    public String register(Model model, @ModelAttribute User user, HttpServletRequest request) {
+        var savedUser = simpleUserService.save(user);
+        if (savedUser.isEmpty()) {
+            model.addAttribute("message", "Пользователь с такой почтой уже существует");
             return "errors/404";
         }
+        var session = request.getSession();
+        session.setAttribute("user", user);
+        return "redirect:/index";
     }
 
     @GetMapping("/login")
-    public String getLoginPage(Model model, HttpSession session) {
+    public String getLoginPage() {
         return "users/login";
     }
 

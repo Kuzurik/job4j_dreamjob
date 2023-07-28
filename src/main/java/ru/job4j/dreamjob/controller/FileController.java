@@ -21,7 +21,7 @@ public class FileController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getById(Model model, @PathVariable int id, HttpSession session) {
+    public ResponseEntity<?> getById(@PathVariable int id) {
         var contentOptional = fileService.getFileById(id);
         if (contentOptional.isEmpty()) {
             return ResponseEntity.notFound().build();
