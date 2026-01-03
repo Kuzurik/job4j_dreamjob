@@ -1,5 +1,7 @@
 package ru.job4j.dreamjob.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 public class Candidate {
@@ -10,13 +12,18 @@ public class Candidate {
 
     private String description;
 
-    private String creationDate;
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
-    public Candidate(int id, String name, String description, String creationDate) {
+    private String creationDate = LocalDateTime.now().format(formatter);
+
+    public Candidate() {
+
+    }
+
+    public Candidate(int id, String name, String description) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.creationDate = creationDate;
     }
 
     public int getId() {

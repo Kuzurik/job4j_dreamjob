@@ -13,27 +13,17 @@ import java.util.Optional;
 @Repository
 public class MemoryCandidateRepository implements CandidateRepository {
 
-    private static final MemoryCandidateRepository INSTANCE = new MemoryCandidateRepository();
-
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
-
-    private String createDate = LocalDateTime.now().format(formatter);
-
     private int nextId = 1;
 
     private final Map<Integer, Candidate> candidates = new HashMap<>();
 
     private MemoryCandidateRepository() {
-        save(new Candidate(0, "Alexander Kuzura", "Intern Java Developer", createDate));
-        save(new Candidate(0, "Petr Arsentev", "Junior Java Developer", createDate));
-        save(new Candidate(0, "Vladimir Danilovich", "Junior+ Java Developer", createDate));
-        save(new Candidate(0, "Alexei Zolotov", "Middle Java Developer", createDate));
-        save(new Candidate(0, "Andrey Rasolko", "Middle+ Java Developer", createDate));
-        save(new Candidate(0, "Irina Kazanouskaya", "Senior Java Developer", createDate));
-    }
-
-    public static MemoryCandidateRepository getInstance() {
-        return INSTANCE;
+        save(new Candidate(0, "Alexander Kuzura", "Intern Java Developer"));
+        save(new Candidate(0, "Petr Arsentev", "Junior Java Developer"));
+        save(new Candidate(0, "Vladimir Danilovich", "Junior+ Java Developer"));
+        save(new Candidate(0, "Alexei Zolotov", "Middle Java Developer"));
+        save(new Candidate(0, "Andrey Rasolko", "Middle+ Java Developer"));
+        save(new Candidate(0, "Irina Kazanouskaya", "Senior Java Developer"));
     }
 
     @Override
@@ -52,7 +42,7 @@ public class MemoryCandidateRepository implements CandidateRepository {
     public boolean update(Candidate candidate) {
         return candidates.computeIfPresent(candidate.getId(),
                 (id, oldVacancy) -> new Candidate(oldVacancy.getId(),
-                        candidate.getName(), candidate.getDescription(), candidate.getCreationDate())) != null;
+                        candidate.getName(), candidate.getDescription())) != null;
     }
 
     @Override
