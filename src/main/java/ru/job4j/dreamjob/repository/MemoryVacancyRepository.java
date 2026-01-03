@@ -24,10 +24,6 @@ public class MemoryVacancyRepository implements VacancyRepository {
         save(new Vacancy(0, "Senior Java Developer", "Senior Java Developer"));
     }
 
-    public static MemoryVacancyRepository getInstance() {
-        return INSTANCE;
-    }
-
     @Override
     public Vacancy save(Vacancy vacancy) {
         vacancy.setId(nextId++);
