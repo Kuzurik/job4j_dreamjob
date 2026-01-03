@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public class MemoryVacancyRepository implements VacancyRepository {
+
     private static final MemoryVacancyRepository INSTANCE = new MemoryVacancyRepository();
 
     private  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
