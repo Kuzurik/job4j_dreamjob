@@ -20,8 +20,8 @@ public class VacancyController {
         return "vacancies/list";
     }
 
-    @GetMapping("/create")
+    @GetMapping("/vacancyCreate")
     public String getCreationPage() {
-        return "vacancies/create";
+        return "vacancies/vacancyCreate";
     }
 }
