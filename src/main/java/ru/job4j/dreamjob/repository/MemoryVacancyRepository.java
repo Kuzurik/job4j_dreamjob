@@ -2,8 +2,6 @@ package ru.job4j.dreamjob.repository;
 
 import ru.job4j.dreamjob.model.Vacancy;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,8 +36,8 @@ public class MemoryVacancyRepository implements VacancyRepository {
     }
 
     @Override
-    public void deleteById(int id) {
-        vacancies.remove(id);
+    public boolean deleteById(Vacancy vacancy, int id) {
+        return vacancies.remove(id, vacancy);
     }
 
     @Override
