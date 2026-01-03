@@ -9,15 +9,11 @@ import ru.job4j.dreamjob.model.Vacancy;
 import ru.job4j.dreamjob.repository.MemoryVacancyRepository;
 import ru.job4j.dreamjob.repository.VacancyRepository;
 
-
-import java.time.format.DateTimeFormatter;
-
 @Controller
 @RequestMapping("/vacancies")
 public class VacancyController {
 
     private final VacancyRepository vacancyRepository = MemoryVacancyRepository.getInstance();
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
     @GetMapping
     public String getAll(Model model) {
@@ -58,12 +54,13 @@ public class VacancyController {
     }
 
     @GetMapping("/delete/{id}")
-    public String delete(Model model, @PathVariable Vacancy vacancy, int id) {
-        var isDeleted = vacancyRepository.deleteById(vacancy, id);
-        if (!isDeleted) {
+    public String delete(Model model, @PathVariable int id) {
+        var isDeleted = vacancyRepository.findById(id).isEmpty();
+        if (isDeleted) {
             model.addAttribute("message", "Вакансия с указанным идентификатором не найдена");
             return "errors/404";
         }
+        vacancyRepository.deleteById(id);
         return "redirect:/vacancies";
     }
 }
