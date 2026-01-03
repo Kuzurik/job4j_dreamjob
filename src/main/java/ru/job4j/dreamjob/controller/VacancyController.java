@@ -1,18 +1,26 @@
 package ru.job4j.dreamjob.controller;
 
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import ru.job4j.dreamjob.model.Vacancy;
 import ru.job4j.dreamjob.repository.MemoryVacancyRepository;
 import ru.job4j.dreamjob.repository.VacancyRepository;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+
 @Controller
-@RequestMapping("/vacancies") /* Работать с кандидатами будем по URI /vacancies/** */
+@RequestMapping("/vacancies")
 public class VacancyController {
 
     private final VacancyRepository vacancyRepository = MemoryVacancyRepository.getInstance();
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
 
     @GetMapping
     public String getAll(Model model) {
@@ -23,5 +31,11 @@ public class VacancyController {
     @GetMapping("/vacancyCreate")
     public String getCreationPage() {
         return "vacancies/vacancyCreate";
+    }
+
+    @PostMapping("/vacancyCreate")
+    public String create(@ModelAttribute Vacancy vacancy) {
+        vacancyRepository.save(vacancy);
+        return "redirect:/vacancies";
     }
 }

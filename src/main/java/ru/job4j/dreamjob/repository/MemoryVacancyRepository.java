@@ -13,21 +13,17 @@ public class MemoryVacancyRepository implements VacancyRepository {
 
     private static final MemoryVacancyRepository INSTANCE = new MemoryVacancyRepository();
 
-    private  DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
-
-    private String createDate = LocalDateTime.now().format(formatter);
-
     private int nextId = 1;
 
     private final Map<Integer, Vacancy> vacancies = new HashMap<>();
 
     private MemoryVacancyRepository() {
-        save(new Vacancy(0, "Intern Java Developer", "Intern Java Developer", createDate));
-        save(new Vacancy(0, "Junior Java Developer", "Junior Java Developer", createDate));
-        save(new Vacancy(0, "Junior+ Java Developer", "Junior+ Java Developer", createDate));
-        save(new Vacancy(0, "Middle Java Developer", "Middle Java Developer", createDate));
-        save(new Vacancy(0, "Middle+ Java Developer", "Middle+ Java Developer", createDate));
-        save(new Vacancy(0, "Senior Java Developer", "Senior Java Developer", createDate));
+        save(new Vacancy(0, "Intern Java Developer", "Intern Java Developer"));
+        save(new Vacancy(0, "Junior Java Developer", "Junior Java Developer"));
+        save(new Vacancy(0, "Junior+ Java Developer", "Junior+ Java Developer"));
+        save(new Vacancy(0, "Middle Java Developer", "Middle Java Developer"));
+        save(new Vacancy(0, "Middle+ Java Developer", "Middle+ Java Developer"));
+        save(new Vacancy(0, "Senior Java Developer", "Senior Java Developer"));
     }
 
     public static MemoryVacancyRepository getInstance() {
@@ -50,7 +46,7 @@ public class MemoryVacancyRepository implements VacancyRepository {
     public boolean update(Vacancy vacancy) {
         return vacancies.computeIfPresent(vacancy.getId(),
                 (id, oldVacancy) -> new Vacancy(oldVacancy.getId(),
-                        vacancy.getTitle(), vacancy.getDescription(), vacancy.getCreationDate())) != null;
+                        vacancy.getTitle(), vacancy.getDescription())) != null;
     }
 
     @Override
