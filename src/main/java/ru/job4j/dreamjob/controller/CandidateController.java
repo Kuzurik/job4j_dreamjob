@@ -6,8 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.dreamjob.model.Candidate;
 import ru.job4j.dreamjob.services.CandidateService;
 
+import javax.annotation.concurrent.ThreadSafe;
+
 @Controller
 @RequestMapping("/candidates")
+@ThreadSafe
 public class CandidateController {
 
     private final CandidateService candidateService;
@@ -25,6 +28,12 @@ public class CandidateController {
     @GetMapping("/candidateCreate")
     public String getCreationPage() {
         return "candidates/candidateCreate";
+    }
+
+    @PostMapping("/candidateCreate")
+    public String create(@ModelAttribute Candidate candidate) {
+        candidateService.save(candidate);
+        return "redirect:/candidates";
     }
 
     @GetMapping("/{id}")

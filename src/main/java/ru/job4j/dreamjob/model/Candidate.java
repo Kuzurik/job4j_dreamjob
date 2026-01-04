@@ -17,7 +17,6 @@ public class Candidate {
     private String creationDate = LocalDateTime.now().format(formatter);
 
     public Candidate() {
-
     }
 
     public Candidate(int id, String name, String description) {
