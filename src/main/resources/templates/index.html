@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head th:include="fragments/header :: header">
+<head th:insert="~{fragments/header :: header}">
 </head>
 <body>
-<div th:replace="fragments/navigation :: navigation"></div>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
 <h3>Проект job4j_dreamjob, выполняемый в рамках курса Job4j</h3>
 <ul class="nav flex-column">
     <li class="nav-item">
@@ -22,6 +22,6 @@
         <a class="nav-link" th:href="@{/candidates/candidateCreate}">Создать кандидата</a>
     </li>
 </ul>
-<footer th:include="blocks/footer :: footer"></footer>
+<footer th:insert="~{fragments/footer :: footer}"></footer>
 </body>
 </html>
