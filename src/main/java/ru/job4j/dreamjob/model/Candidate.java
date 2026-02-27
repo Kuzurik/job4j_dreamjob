@@ -2,9 +2,20 @@ package ru.job4j.dreamjob.model;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Map;
 import java.util.Objects;
 
 public class Candidate {
+
+    public static final Map<String, String> COLUMN_MAPPING = Map.of(
+            "id", "id",
+            "name", "name",
+            "description", "description",
+            "creation_date", "creationDate",
+            "visible", "visible",
+            "city_id", "cityId",
+            "file_id", "fileId"
+    );
 
     private int id;
 
@@ -12,9 +23,7 @@ public class Candidate {
 
     private String description;
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm:ss");
-
-    private String creationDate = LocalDateTime.now().format(formatter);
+    private LocalDateTime creationDate = LocalDateTime.now();
 
     private boolean visible;
 
@@ -58,14 +67,6 @@ public class Candidate {
         this.description = description;
     }
 
-    public String getCreationDate() {
-        return creationDate;
-    }
-
-    public void setCreationDate(String creationDate) {
-        this.creationDate = creationDate;
-    }
-
     public boolean getVisible() {
         return visible;
     }
@@ -84,6 +85,14 @@ public class Candidate {
 
     public int getFileId() {
         return fileId;
+    }
+
+    public LocalDateTime getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
     public void setFileId(int fileId) {
